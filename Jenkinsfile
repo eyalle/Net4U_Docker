@@ -10,7 +10,7 @@ pipeline{
             }
         }
 
-        stage ('run docker'){
+        stage ('build docker'){
             steps{
                 dir("${env.WORKSPACE}/docker"){
                     sh "pwd"
@@ -19,9 +19,16 @@ pipeline{
                     sh 'echo "killing docker containers"'
                     sh 'docker ps -aq | xargs -r docker rm;'
                     sh 'echo "building docker image"'
-                    sh 'docker build . -t "test"'
+                    sh 'docker build . -t "initial_test"'
+                }
+            }
+        }
+
+        stage ('run docker'){
+            steps{
+                dir("${env.WORKSPACE}/docker"){
                     sh 'echo "trying to run docker"'
-                    sh 'docker run -dit --name my_app  -p 8081:80 test'
+                    sh 'docker run -dit --name my_app  -p 8081:80 initial_test'
                 }
             }
         }
